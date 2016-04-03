@@ -10,6 +10,7 @@ func handleClient(client *tutorial.CalculatorClient) (err error) {
 	var (
 		requestErr error
 		result int32
+		result64 int64
 	)
 
 	fmt.Println("Send ping()")
@@ -21,12 +22,12 @@ func handleClient(client *tutorial.CalculatorClient) (err error) {
 	}
 
 	fmt.Println("Send Plus(10, 10)")
-	result, requestErr = client.Plus(10, 10)
+	result64, requestErr = client.Plus(10, 10)
 	if requestErr != nil {
 		fmt.Println(requestErr.Error())
 		return err
 	}
-	fmt.Println("Result := ", result)
+	fmt.Println("Result := ", result64)
 
 	fmt.Println("Send Minus(25, 10)")
 	result, requestErr = client.Minus(25, 10)
@@ -44,13 +45,13 @@ func handleClient(client *tutorial.CalculatorClient) (err error) {
 	}
 	fmt.Println("Result := ", result)
 
-	fmt.Println("Send Div(25, 5)")
-	result, requestErr = client.Div(25, 5)
+	fmt.Println("Send Mul(5, 5)")
+	result64, requestErr = client.Mul(5, 5)
 	if requestErr != nil {
 		fmt.Println(requestErr.Error())
 		return err
 	}
-	fmt.Println("Result := ", result)
+	fmt.Println("Result := ", result64)
 
 	return nil
 }

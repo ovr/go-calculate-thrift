@@ -19,14 +19,20 @@ func (p *CalculatorHandler) Ping() (err error) {
 	return nil
 }
 
-func (p *CalculatorHandler) Plus(num1 int32, num2 int32) (r int32, err error) {
+func (p *CalculatorHandler) Plus(num1 int32, num2 int32) (r int64, err error) {
 	fmt.Print("Plus(", num1, ",", num2, ")\n")
-	return num1 + num2, nil
+	return int64(num1 + num2), nil
 }
 
 func (p *CalculatorHandler) Minus(num1 int32, num2 int32) (val int32, err error) {
 	fmt.Print("Minus(", num1, ",", num2, ")\n")
 	return num1 - num2, nil
+}
+
+func (p *CalculatorHandler) Mul(num1 int32, num2 int32) (r int64, err error) {
+	fmt.Print("Mul(", num1, ",", num2, ")\n")
+
+	return int64(num1 * num2), nil
 }
 
 func (p *CalculatorHandler) Div(num1 int32, num2 int32) (val int32, err error) {
