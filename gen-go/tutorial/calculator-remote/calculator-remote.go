@@ -27,7 +27,7 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "  i32 div(i32 num1, i32 num2)")
 	fmt.Fprintln(os.Stderr, "  double mod(double num1, double num2)")
 	fmt.Fprintln(os.Stderr, "  i32 pow(i32 num1, i32 num2)")
-	fmt.Fprintln(os.Stderr, "  i32 calculate(i32 logid, Work w)")
+	fmt.Fprintln(os.Stderr, "  i32 calculate(Work w)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -261,35 +261,28 @@ func main() {
 		fmt.Print("\n")
 		break
 	case "calculate":
-		if flag.NArg()-1 != 2 {
-			fmt.Fprintln(os.Stderr, "Calculate requires 2 args")
+		if flag.NArg()-1 != 1 {
+			fmt.Fprintln(os.Stderr, "Calculate requires 1 args")
 			flag.Usage()
 		}
-		tmp0, err30 := (strconv.Atoi(flag.Arg(1)))
-		if err30 != nil {
+		arg30 := flag.Arg(1)
+		mbTrans31 := thrift.NewTMemoryBufferLen(len(arg30))
+		defer mbTrans31.Close()
+		_, err32 := mbTrans31.WriteString(arg30)
+		if err32 != nil {
 			Usage()
 			return
 		}
-		argvalue0 := int32(tmp0)
+		factory33 := thrift.NewTSimpleJSONProtocolFactory()
+		jsProt34 := factory33.GetProtocol(mbTrans31)
+		argvalue0 := tutorial.NewWork()
+		err35 := argvalue0.Read(jsProt34)
+		if err35 != nil {
+			Usage()
+			return
+		}
 		value0 := argvalue0
-		arg31 := flag.Arg(2)
-		mbTrans32 := thrift.NewTMemoryBufferLen(len(arg31))
-		defer mbTrans32.Close()
-		_, err33 := mbTrans32.WriteString(arg31)
-		if err33 != nil {
-			Usage()
-			return
-		}
-		factory34 := thrift.NewTSimpleJSONProtocolFactory()
-		jsProt35 := factory34.GetProtocol(mbTrans32)
-		argvalue1 := tutorial.NewWork()
-		err36 := argvalue1.Read(jsProt35)
-		if err36 != nil {
-			Usage()
-			return
-		}
-		value1 := argvalue1
-		fmt.Print(client.Calculate(value0, value1))
+		fmt.Print(client.Calculate(value0))
 		fmt.Print("\n")
 		break
 	case "":

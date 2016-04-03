@@ -41,9 +41,8 @@ type Calculator interface {
 	//  - Num2
 	Pow(num1 int32, num2 int32) (r int32, err error)
 	// Parameters:
-	//  - Logid
 	//  - W
-	Calculate(logid int32, w *Work) (r int32, err error)
+	Calculate(w *Work) (r int32, err error)
 }
 
 type CalculatorClient struct {
@@ -619,16 +618,15 @@ func (p *CalculatorClient) recvPow() (value int32, err error) {
 }
 
 // Parameters:
-//  - Logid
 //  - W
-func (p *CalculatorClient) Calculate(logid int32, w *Work) (r int32, err error) {
-	if err = p.sendCalculate(logid, w); err != nil {
+func (p *CalculatorClient) Calculate(w *Work) (r int32, err error) {
+	if err = p.sendCalculate(w); err != nil {
 		return
 	}
 	return p.recvCalculate()
 }
 
-func (p *CalculatorClient) sendCalculate(logid int32, w *Work) (err error) {
+func (p *CalculatorClient) sendCalculate(w *Work) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -639,8 +637,7 @@ func (p *CalculatorClient) sendCalculate(logid int32, w *Work) (err error) {
 		return
 	}
 	args := CalculatorCalculateArgs{
-		Logid: logid,
-		W:     w,
+		W: w,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -1105,7 +1102,7 @@ func (p *calculatorProcessorCalculate) Process(seqId int32, iprot, oprot thrift.
 	result := CalculatorCalculateResult{}
 	var retval int32
 	var err2 error
-	if retval, err2 = p.handler.Calculate(args.Logid, args.W); err2 != nil {
+	if retval, err2 = p.handler.Calculate(args.W); err2 != nil {
 		switch v := err2.(type) {
 		case *InvalidOperation:
 			result.Ouch = v
@@ -2615,19 +2612,13 @@ func (p *CalculatorPowResult) String() string {
 }
 
 // Attributes:
-//  - Logid
 //  - W
 type CalculatorCalculateArgs struct {
-	Logid int32 `thrift:"logid,1" json:"logid"`
-	W     *Work `thrift:"w,2" json:"w"`
+	W *Work `thrift:"w,1" json:"w"`
 }
 
 func NewCalculatorCalculateArgs() *CalculatorCalculateArgs {
 	return &CalculatorCalculateArgs{}
-}
-
-func (p *CalculatorCalculateArgs) GetLogid() int32 {
-	return p.Logid
 }
 
 var CalculatorCalculateArgs_W_DEFAULT *Work
@@ -2660,10 +2651,6 @@ func (p *CalculatorCalculateArgs) Read(iprot thrift.TProtocol) error {
 			if err := p.readField1(iprot); err != nil {
 				return err
 			}
-		case 2:
-			if err := p.readField2(iprot); err != nil {
-				return err
-			}
 		default:
 			if err := iprot.Skip(fieldTypeId); err != nil {
 				return err
@@ -2680,15 +2667,6 @@ func (p *CalculatorCalculateArgs) Read(iprot thrift.TProtocol) error {
 }
 
 func (p *CalculatorCalculateArgs) readField1(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI32(); err != nil {
-		return thrift.PrependError("error reading field 1: ", err)
-	} else {
-		p.Logid = v
-	}
-	return nil
-}
-
-func (p *CalculatorCalculateArgs) readField2(iprot thrift.TProtocol) error {
 	p.W = &Work{}
 	if err := p.W.Read(iprot); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.W), err)
@@ -2703,9 +2681,6 @@ func (p *CalculatorCalculateArgs) Write(oprot thrift.TProtocol) error {
 	if err := p.writeField1(oprot); err != nil {
 		return err
 	}
-	if err := p.writeField2(oprot); err != nil {
-		return err
-	}
 	if err := oprot.WriteFieldStop(); err != nil {
 		return thrift.PrependError("write field stop error: ", err)
 	}
@@ -2716,27 +2691,14 @@ func (p *CalculatorCalculateArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *CalculatorCalculateArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("logid", thrift.I32, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:logid: ", p), err)
-	}
-	if err := oprot.WriteI32(int32(p.Logid)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.logid (1) field write error: ", p), err)
-	}
-	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:logid: ", p), err)
-	}
-	return err
-}
-
-func (p *CalculatorCalculateArgs) writeField2(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("w", thrift.STRUCT, 2); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:w: ", p), err)
+	if err := oprot.WriteFieldBegin("w", thrift.STRUCT, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:w: ", p), err)
 	}
 	if err := p.W.Write(oprot); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T error writing struct: ", p.W), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:w: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:w: ", p), err)
 	}
 	return err
 }
