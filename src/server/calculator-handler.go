@@ -56,7 +56,7 @@ func (p *CalculatorHandler) Pow(num1 int32, num2 int32) (val int32, err error) {
 	return 0, nil
 }
 
-func (p *CalculatorHandler) Calculate(logid int32, w *tutorial.Work) (val int32, err error) {
+func (p *CalculatorHandler) Calculate(w *tutorial.Work) (val int32, err error) {
 	switch w.Op {
 	case tutorial.Operation_ADD:
 		val = w.Num1 + w.Num2
