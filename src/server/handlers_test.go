@@ -1,8 +1,8 @@
 package main
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 var dataProviderPlusTests = []struct {
@@ -22,7 +22,7 @@ var dataProviderPlusTests = []struct {
 func TestPlus(t *testing.T) {
 	var (
 		result int64
-		err error
+		err    error
 	)
 
 	service := NewCalculatorHandler()

@@ -2,13 +2,12 @@ package main
 
 import (
 	"flag"
-	"git.apache.org/thrift.git/lib/go/thrift"
 	"fmt"
-	"os"
+	"git.apache.org/thrift.git/lib/go/thrift"
 	"github.com/ovr/go-calculate-thrift/gen-go/tutorial"
 	"log"
+	"os"
 )
-
 
 func runServer(transportFactory thrift.TTransportFactory, protocolFactory thrift.TProtocolFactory, addr string) error {
 	var transport thrift.TServerTransport

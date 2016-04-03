@@ -1,17 +1,17 @@
 package main
 
 import (
-	"git.apache.org/thrift.git/lib/go/thrift"
 	"fmt"
+	"git.apache.org/thrift.git/lib/go/thrift"
 	"github.com/ovr/go-calculate-thrift/gen-go/tutorial"
 )
 
 func handleClient(client *tutorial.CalculatorClient) (err error) {
 	var (
 		requestErr error
-		result int32
-		result64 int64
-		result64f float64
+		result     int32
+		result64   int64
+		result64f  float64
 	)
 
 	fmt.Println("Send ping()")
@@ -76,7 +76,6 @@ func handleClient(client *tutorial.CalculatorClient) (err error) {
 	}
 	fmt.Println("Result := ", result)
 
-
 	fmt.Println("Send Work(Operation_DIVIDE, 25, 5)")
 	work.Op = tutorial.Operation_DIVIDE
 	work.Num1 = 25
@@ -88,7 +87,6 @@ func handleClient(client *tutorial.CalculatorClient) (err error) {
 		return err
 	}
 	fmt.Println("Result := ", result)
-
 
 	return nil
 }

@@ -1,9 +1,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/ovr/go-calculate-thrift/gen-go/tutorial"
-	"errors"
 	"math"
 )
 
@@ -40,7 +40,7 @@ func (p *CalculatorHandler) Div(num1 int32, num2 int32) (val int32, err error) {
 	fmt.Print("Div(", num1, ",", num2, ")\n")
 
 	if num2 == 0 {
-		return 0, errors.New("You cannot div on zero");
+		return 0, errors.New("You cannot div on zero")
 	}
 
 	return num1 / num2, nil

@@ -2,12 +2,12 @@ package main
 
 import (
 	"flag"
-	"git.apache.org/thrift.git/lib/go/thrift"
 	"fmt"
+	"git.apache.org/thrift.git/lib/go/thrift"
 	"os"
 )
 
-func main()  {
+func main() {
 	protocol := flag.String("P", "binary", "Protocol (binary, compact, json, simplejson)")
 	addr := flag.String("addr", "localhost:9090", "Address to listen to")
 
