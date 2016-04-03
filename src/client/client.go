@@ -36,6 +36,21 @@ func handleClient(client *tutorial.CalculatorClient) (err error) {
 	}
 	fmt.Println("Result := ", result)
 
+	fmt.Println("Send Div(25, 5)")
+	result, requestErr = client.Div(25, 5)
+	if requestErr != nil {
+		fmt.Println(requestErr.Error())
+		return err
+	}
+	fmt.Println("Result := ", result)
+
+	fmt.Println("Send Div(25, 5)")
+	result, requestErr = client.Div(25, 5)
+	if requestErr != nil {
+		fmt.Println(requestErr.Error())
+		return err
+	}
+	fmt.Println("Result := ", result)
 
 	return nil
 }
