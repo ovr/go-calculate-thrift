@@ -5,4 +5,5 @@ branches:
     - master
 
 script:
+  - go get git.apache.org/thrift.git/lib/go/thrift
   - make tests
