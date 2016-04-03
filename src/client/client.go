@@ -62,6 +62,34 @@ func handleClient(client *tutorial.CalculatorClient) (err error) {
 	}
 	fmt.Println("Result := ", result64f)
 
+	work := tutorial.NewWork()
+
+	fmt.Println("Send Work(Operation_ADD, 10, 25)")
+	work.Op = tutorial.Operation_ADD
+	work.Num1 = 10
+	work.Num2 = 15
+
+	result, err = client.Calculate(1, work)
+	if err != nil {
+		fmt.Println(requestErr.Error())
+		return err
+	}
+	fmt.Println("Result := ", result)
+
+
+	fmt.Println("Send Work(Operation_DIVIDE, 25, 5)")
+	work.Op = tutorial.Operation_DIVIDE
+	work.Num1 = 25
+	work.Num2 = 5
+
+	result, err = client.Calculate(1, work)
+	if err != nil {
+		fmt.Println(requestErr.Error())
+		return err
+	}
+	fmt.Println("Result := ", result)
+
+
 	return nil
 }
 

@@ -57,5 +57,34 @@ func (p *CalculatorHandler) Pow(num1 int32, num2 int32) (val int32, err error) {
 }
 
 func (p *CalculatorHandler) Calculate(logid int32, w *tutorial.Work) (val int32, err error) {
-	return 0, err
+	switch w.Op {
+	case tutorial.Operation_ADD:
+		val = w.Num1 + w.Num2
+		break
+	case tutorial.Operation_SUBTRACT:
+		val = w.Num1 - w.Num2
+		break
+	case tutorial.Operation_MULTIPLY:
+		val = w.Num1 * w.Num2
+		break
+	case tutorial.Operation_DIVIDE:
+		if w.Num2 == 0 {
+			ouch := tutorial.NewInvalidOperation()
+			ouch.WhatOp = int32(w.Op)
+			ouch.Why = "Cannot divide by 0"
+
+			return 0, ouch
+		}
+
+		val = w.Num1 / w.Num2
+		break
+	default:
+		ouch := tutorial.NewInvalidOperation()
+		ouch.WhatOp = int32(w.Op)
+		ouch.Why = "Unknown operation"
+
+		return 0, ouch
+	}
+
+	return val, err
 }
