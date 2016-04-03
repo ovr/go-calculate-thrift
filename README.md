@@ -1,1 +1,2 @@
-# go-calculate-thrift
+Calculate RPC server on Go/Thrift
+=================================
