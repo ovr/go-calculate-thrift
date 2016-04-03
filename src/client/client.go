@@ -69,7 +69,7 @@ func handleClient(client *tutorial.CalculatorClient) (err error) {
 	work.Num1 = 10
 	work.Num2 = 15
 
-	result, err = client.Calculate(1, work)
+	result, err = client.Calculate(work)
 	if err != nil {
 		fmt.Println(requestErr.Error())
 		return err
@@ -82,7 +82,7 @@ func handleClient(client *tutorial.CalculatorClient) (err error) {
 	work.Num1 = 25
 	work.Num2 = 5
 
-	result, err = client.Calculate(1, work)
+	result, err = client.Calculate(work)
 	if err != nil {
 		fmt.Println(requestErr.Error())
 		return err
