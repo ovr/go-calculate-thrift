@@ -2,6 +2,15 @@ Calculate RPC server on Go/Thrift
 =================================
 [![Build Status](https://travis-ci.org/ovr/go-calculate-thrift.svg?branch=master)](https://travis-ci.org/ovr/go-calculate-thrift)
 
+# Features
+
+- Thrift protocol with methods and own structure
+- Client and Sever
+- Code style check
+- Go tests with data provider for server (very simple)
+- Dockerfile
+- Vagrant ready
+
 # Installation
 
 ### OSX
@@ -26,3 +35,7 @@ cd src/client
 go build .
 ./client
 ```
+
+# LICENSE
+
+MIT
