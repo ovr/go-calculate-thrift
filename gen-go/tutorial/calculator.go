@@ -19,11 +19,15 @@ type Calculator interface {
 	// Parameters:
 	//  - Num1
 	//  - Num2
-	Plus(num1 int32, num2 int32) (r int32, err error)
+	Plus(num1 int32, num2 int32) (r int64, err error)
 	// Parameters:
 	//  - Num1
 	//  - Num2
 	Minus(num1 int32, num2 int32) (r int32, err error)
+	// Parameters:
+	//  - Num1
+	//  - Num2
+	Mul(num1 int32, num2 int32) (r int64, err error)
 	// Parameters:
 	//  - Num1
 	//  - Num2
@@ -143,7 +147,7 @@ func (p *CalculatorClient) recvPing() (err error) {
 // Parameters:
 //  - Num1
 //  - Num2
-func (p *CalculatorClient) Plus(num1 int32, num2 int32) (r int32, err error) {
+func (p *CalculatorClient) Plus(num1 int32, num2 int32) (r int64, err error) {
 	if err = p.sendPlus(num1, num2); err != nil {
 		return
 	}
@@ -173,7 +177,7 @@ func (p *CalculatorClient) sendPlus(num1 int32, num2 int32) (err error) {
 	return oprot.Flush()
 }
 
-func (p *CalculatorClient) recvPlus() (value int32, err error) {
+func (p *CalculatorClient) recvPlus() (value int64, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -301,6 +305,85 @@ func (p *CalculatorClient) recvMinus() (value int32, err error) {
 // Parameters:
 //  - Num1
 //  - Num2
+func (p *CalculatorClient) Mul(num1 int32, num2 int32) (r int64, err error) {
+	if err = p.sendMul(num1, num2); err != nil {
+		return
+	}
+	return p.recvMul()
+}
+
+func (p *CalculatorClient) sendMul(num1 int32, num2 int32) (err error) {
+	oprot := p.OutputProtocol
+	if oprot == nil {
+		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.OutputProtocol = oprot
+	}
+	p.SeqId++
+	if err = oprot.WriteMessageBegin("mul", thrift.CALL, p.SeqId); err != nil {
+		return
+	}
+	args := CalculatorMulArgs{
+		Num1: num1,
+		Num2: num2,
+	}
+	if err = args.Write(oprot); err != nil {
+		return
+	}
+	if err = oprot.WriteMessageEnd(); err != nil {
+		return
+	}
+	return oprot.Flush()
+}
+
+func (p *CalculatorClient) recvMul() (value int64, err error) {
+	iprot := p.InputProtocol
+	if iprot == nil {
+		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.InputProtocol = iprot
+	}
+	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
+	if err != nil {
+		return
+	}
+	if method != "mul" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "mul failed: wrong method name")
+		return
+	}
+	if p.SeqId != seqId {
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "mul failed: out of sequence response")
+		return
+	}
+	if mTypeId == thrift.EXCEPTION {
+		error6 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error7 error
+		error7, err = error6.Read(iprot)
+		if err != nil {
+			return
+		}
+		if err = iprot.ReadMessageEnd(); err != nil {
+			return
+		}
+		err = error7
+		return
+	}
+	if mTypeId != thrift.REPLY {
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "mul failed: invalid message type")
+		return
+	}
+	result := CalculatorMulResult{}
+	if err = result.Read(iprot); err != nil {
+		return
+	}
+	if err = iprot.ReadMessageEnd(); err != nil {
+		return
+	}
+	value = result.GetSuccess()
+	return
+}
+
+// Parameters:
+//  - Num1
+//  - Num2
 func (p *CalculatorClient) Div(num1 int32, num2 int32) (r int32, err error) {
 	if err = p.sendDiv(num1, num2); err != nil {
 		return
@@ -350,16 +433,16 @@ func (p *CalculatorClient) recvDiv() (value int32, err error) {
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error6 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error7 error
-		error7, err = error6.Read(iprot)
+		error8 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error9 error
+		error9, err = error8.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error7
+		err = error9
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -429,16 +512,16 @@ func (p *CalculatorClient) recvMod() (value int32, err error) {
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error8 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error9 error
-		error9, err = error8.Read(iprot)
+		error10 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error11 error
+		error11, err = error10.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error9
+		err = error11
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -508,16 +591,16 @@ func (p *CalculatorClient) recvPow() (value int32, err error) {
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error10 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error11 error
-		error11, err = error10.Read(iprot)
+		error12 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error13 error
+		error13, err = error12.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error11
+		err = error13
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -587,16 +670,16 @@ func (p *CalculatorClient) recvCalculate() (value int32, err error) {
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error12 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error13 error
-		error13, err = error12.Read(iprot)
+		error14 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error15 error
+		error15, err = error14.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error13
+		err = error15
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -638,15 +721,16 @@ func (p *CalculatorProcessor) ProcessorMap() map[string]thrift.TProcessorFunctio
 
 func NewCalculatorProcessor(handler Calculator) *CalculatorProcessor {
 
-	self14 := &CalculatorProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
-	self14.processorMap["ping"] = &calculatorProcessorPing{handler: handler}
-	self14.processorMap["plus"] = &calculatorProcessorPlus{handler: handler}
-	self14.processorMap["minus"] = &calculatorProcessorMinus{handler: handler}
-	self14.processorMap["div"] = &calculatorProcessorDiv{handler: handler}
-	self14.processorMap["mod"] = &calculatorProcessorMod{handler: handler}
-	self14.processorMap["pow"] = &calculatorProcessorPow{handler: handler}
-	self14.processorMap["calculate"] = &calculatorProcessorCalculate{handler: handler}
-	return self14
+	self16 := &CalculatorProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
+	self16.processorMap["ping"] = &calculatorProcessorPing{handler: handler}
+	self16.processorMap["plus"] = &calculatorProcessorPlus{handler: handler}
+	self16.processorMap["minus"] = &calculatorProcessorMinus{handler: handler}
+	self16.processorMap["mul"] = &calculatorProcessorMul{handler: handler}
+	self16.processorMap["div"] = &calculatorProcessorDiv{handler: handler}
+	self16.processorMap["mod"] = &calculatorProcessorMod{handler: handler}
+	self16.processorMap["pow"] = &calculatorProcessorPow{handler: handler}
+	self16.processorMap["calculate"] = &calculatorProcessorCalculate{handler: handler}
+	return self16
 }
 
 func (p *CalculatorProcessor) Process(iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
@@ -659,12 +743,12 @@ func (p *CalculatorProcessor) Process(iprot, oprot thrift.TProtocol) (success bo
 	}
 	iprot.Skip(thrift.STRUCT)
 	iprot.ReadMessageEnd()
-	x15 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
+	x17 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
 	oprot.WriteMessageBegin(name, thrift.EXCEPTION, seqId)
-	x15.Write(oprot)
+	x17.Write(oprot)
 	oprot.WriteMessageEnd()
 	oprot.Flush()
-	return false, x15
+	return false, x17
 
 }
 
@@ -731,7 +815,7 @@ func (p *calculatorProcessorPlus) Process(seqId int32, iprot, oprot thrift.TProt
 
 	iprot.ReadMessageEnd()
 	result := CalculatorPlusResult{}
-	var retval int32
+	var retval int64
 	var err2 error
 	if retval, err2 = p.handler.Plus(args.Num1, args.Num2); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing plus: "+err2.Error())
@@ -792,6 +876,54 @@ func (p *calculatorProcessorMinus) Process(seqId int32, iprot, oprot thrift.TPro
 		result.Success = &retval
 	}
 	if err2 = oprot.WriteMessageBegin("minus", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type calculatorProcessorMul struct {
+	handler Calculator
+}
+
+func (p *calculatorProcessorMul) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := CalculatorMulArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("mul", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	result := CalculatorMulResult{}
+	var retval int64
+	var err2 error
+	if retval, err2 = p.handler.Mul(args.Num1, args.Num2); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing mul: "+err2.Error())
+		oprot.WriteMessageBegin("mul", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return true, err2
+	} else {
+		result.Success = &retval
+	}
+	if err2 = oprot.WriteMessageBegin("mul", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -1243,16 +1375,16 @@ func (p *CalculatorPlusArgs) String() string {
 // Attributes:
 //  - Success
 type CalculatorPlusResult struct {
-	Success *int32 `thrift:"success,0" json:"success,omitempty"`
+	Success *int64 `thrift:"success,0" json:"success,omitempty"`
 }
 
 func NewCalculatorPlusResult() *CalculatorPlusResult {
 	return &CalculatorPlusResult{}
 }
 
-var CalculatorPlusResult_Success_DEFAULT int32
+var CalculatorPlusResult_Success_DEFAULT int64
 
-func (p *CalculatorPlusResult) GetSuccess() int32 {
+func (p *CalculatorPlusResult) GetSuccess() int64 {
 	if !p.IsSetSuccess() {
 		return CalculatorPlusResult_Success_DEFAULT
 	}
@@ -1296,7 +1428,7 @@ func (p *CalculatorPlusResult) Read(iprot thrift.TProtocol) error {
 }
 
 func (p *CalculatorPlusResult) readField0(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI32(); err != nil {
+	if v, err := iprot.ReadI64(); err != nil {
 		return thrift.PrependError("error reading field 0: ", err)
 	} else {
 		p.Success = &v
@@ -1322,10 +1454,10 @@ func (p *CalculatorPlusResult) Write(oprot thrift.TProtocol) error {
 
 func (p *CalculatorPlusResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
-		if err := oprot.WriteFieldBegin("success", thrift.I32, 0); err != nil {
+		if err := oprot.WriteFieldBegin("success", thrift.I64, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
 		}
-		if err := oprot.WriteI32(int32(*p.Success)); err != nil {
+		if err := oprot.WriteI64(int64(*p.Success)); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
 		}
 		if err := oprot.WriteFieldEnd(); err != nil {
@@ -1568,6 +1700,234 @@ func (p *CalculatorMinusResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("CalculatorMinusResult(%+v)", *p)
+}
+
+// Attributes:
+//  - Num1
+//  - Num2
+type CalculatorMulArgs struct {
+	Num1 int32 `thrift:"num1,1" json:"num1"`
+	Num2 int32 `thrift:"num2,2" json:"num2"`
+}
+
+func NewCalculatorMulArgs() *CalculatorMulArgs {
+	return &CalculatorMulArgs{}
+}
+
+func (p *CalculatorMulArgs) GetNum1() int32 {
+	return p.Num1
+}
+
+func (p *CalculatorMulArgs) GetNum2() int32 {
+	return p.Num2
+}
+func (p *CalculatorMulArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField1(iprot); err != nil {
+				return err
+			}
+		case 2:
+			if err := p.readField2(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *CalculatorMulArgs) readField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return thrift.PrependError("error reading field 1: ", err)
+	} else {
+		p.Num1 = v
+	}
+	return nil
+}
+
+func (p *CalculatorMulArgs) readField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return thrift.PrependError("error reading field 2: ", err)
+	} else {
+		p.Num2 = v
+	}
+	return nil
+}
+
+func (p *CalculatorMulArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("mul_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField1(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField2(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *CalculatorMulArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("num1", thrift.I32, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:num1: ", p), err)
+	}
+	if err := oprot.WriteI32(int32(p.Num1)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.num1 (1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:num1: ", p), err)
+	}
+	return err
+}
+
+func (p *CalculatorMulArgs) writeField2(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("num2", thrift.I32, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:num2: ", p), err)
+	}
+	if err := oprot.WriteI32(int32(p.Num2)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.num2 (2) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:num2: ", p), err)
+	}
+	return err
+}
+
+func (p *CalculatorMulArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("CalculatorMulArgs(%+v)", *p)
+}
+
+// Attributes:
+//  - Success
+type CalculatorMulResult struct {
+	Success *int64 `thrift:"success,0" json:"success,omitempty"`
+}
+
+func NewCalculatorMulResult() *CalculatorMulResult {
+	return &CalculatorMulResult{}
+}
+
+var CalculatorMulResult_Success_DEFAULT int64
+
+func (p *CalculatorMulResult) GetSuccess() int64 {
+	if !p.IsSetSuccess() {
+		return CalculatorMulResult_Success_DEFAULT
+	}
+	return *p.Success
+}
+func (p *CalculatorMulResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *CalculatorMulResult) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 0:
+			if err := p.readField0(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *CalculatorMulResult) readField0(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
+	}
+	return nil
+}
+
+func (p *CalculatorMulResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("mul_result"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField0(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *CalculatorMulResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err := oprot.WriteFieldBegin("success", thrift.I64, 0); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
+		}
+		if err := oprot.WriteI64(int64(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
+		}
+		if err := oprot.WriteFieldEnd(); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
+		}
+	}
+	return err
+}
+
+func (p *CalculatorMulResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("CalculatorMulResult(%+v)", *p)
 }
 
 // Attributes:

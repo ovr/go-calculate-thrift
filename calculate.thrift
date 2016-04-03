@@ -24,9 +24,11 @@ exception InvalidOperation {
 service Calculator {
    void ping(),
 
-   i32 plus(1:i32 num1, 2:i32 num2),
+   i64 plus(1:i32 num1, 2:i32 num2),
 
    i32 minus(1:i32 num1, 2:i32 num2),
+
+   i64 mul(1:i32 num1, 2:i32 num2),
 
    i32 div(1:i32 num1, 2:i32 num2),
 
