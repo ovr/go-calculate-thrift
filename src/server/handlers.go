@@ -2,9 +2,9 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"github.com/ovr/go-calculate-thrift/gen-go/tutorial"
 	"math"
+	"log"
 )
 
 type CalculatorHandler struct {
@@ -16,28 +16,27 @@ func NewCalculatorHandler() *CalculatorHandler {
 }
 
 func (p *CalculatorHandler) Ping() (err error) {
-	fmt.Print("ping()\n")
+	log.Println("Ping()")
 	return nil
 }
 
 func (p *CalculatorHandler) Plus(num1 int32, num2 int32) (r int64, err error) {
-	fmt.Print("Plus(", num1, ",", num2, ")\n")
+	log.Println("Plus(", num1, ",", num2, ")")
 	return int64(num1 + num2), nil
 }
 
 func (p *CalculatorHandler) Minus(num1 int32, num2 int32) (val int32, err error) {
-	fmt.Print("Minus(", num1, ",", num2, ")\n")
+	log.Println("Minus(", num1, ",", num2, ")")
 	return num1 - num2, nil
 }
 
 func (p *CalculatorHandler) Mul(num1 int32, num2 int32) (r int64, err error) {
-	fmt.Print("Mul(", num1, ",", num2, ")\n")
-
+	log.Println("Mul(", num1, ",", num2, ")")
 	return int64(num1 * num2), nil
 }
 
 func (p *CalculatorHandler) Div(num1 int32, num2 int32) (val int32, err error) {
-	fmt.Print("Div(", num1, ",", num2, ")\n")
+	log.Println("Div(", num1, ",", num2, ")")
 
 	if num2 == 0 {
 		return 0, errors.New("You cannot div on zero")
@@ -47,12 +46,12 @@ func (p *CalculatorHandler) Div(num1 int32, num2 int32) (val int32, err error) {
 }
 
 func (p *CalculatorHandler) Mod(num1 float64, num2 float64) (r float64, err error) {
-	fmt.Print("Mod(", num1, ",", num2, ")\n")
+	log.Println("Mod(", num1, ",", num2, ")")
 	return math.Mod(num1, num2), nil
 }
 
 func (p *CalculatorHandler) Pow(num1 int32, num2 int32) (val int32, err error) {
-	fmt.Print("Pow(", num1, ",", num2, ")\n")
+	log.Println("Pow(", num1, ",", num2, ")")
 	return 0, nil
 }
 
