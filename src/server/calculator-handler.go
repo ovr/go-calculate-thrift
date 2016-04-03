@@ -2,16 +2,15 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"github.com/ovr/go-calculate-thrift/gen-go/tutorial"
 )
 
 type CalculatorHandler struct {
-	log map[int]*shared.SharedStruct
+	tutorial.Calculator
 }
 
 func NewCalculatorHandler() *CalculatorHandler {
-	return &CalculatorHandler{log: make(map[int]*shared.SharedStruct)}
+	return &CalculatorHandler{}
 }
 
 func (p *CalculatorHandler) Ping() (err error) {
@@ -19,63 +18,31 @@ func (p *CalculatorHandler) Ping() (err error) {
 	return nil
 }
 
-func (p *CalculatorHandler) Add(num1 int32, num2 int32) (retval17 int32, err error) {
+func (p *CalculatorHandler) Plus(num1 int32, num2 int32) (r int32, err error) {
 	fmt.Print("add(", num1, ",", num2, ")\n")
 	return num1 + num2, nil
 }
 
+func (p *CalculatorHandler) Minus(num1 int32, num2 int32) (val int32, err error) {
+	fmt.Print("Minus(", num1, ",", num2, ")\n")
+	return num1 - num2, nil
+}
+
+func (p *CalculatorHandler) Div(num1 int32, num2 int32) (val int32, err error) {
+	fmt.Print("Div(", num1, ",", num2, ")\n")
+	return 0, nil
+}
+
+func (p *CalculatorHandler) Mod(num1 int32, num2 int32) (val int32, err error) {
+	fmt.Print("Mod(", num1, ",", num2, ")\n")
+	return 0, nil
+}
+
+func (p *CalculatorHandler) Pow(num1 int32, num2 int32) (val int32, err error) {
+	fmt.Print("Pow(", num1, ",", num2, ")\n")
+	return 0, nil
+}
+
 func (p *CalculatorHandler) Calculate(logid int32, w *tutorial.Work) (val int32, err error) {
-	fmt.Print("calculate(", logid, ", {", w.Op, ",", w.Num1, ",", w.Num2, "})\n")
-	switch w.Op {
-	case tutorial.Operation_ADD:
-		val = w.Num1 + w.Num2
-		break
-	case tutorial.Operation_SUBTRACT:
-		val = w.Num1 - w.Num2
-		break
-	case tutorial.Operation_MULTIPLY:
-		val = w.Num1 * w.Num2
-		break
-	case tutorial.Operation_DIVIDE:
-		if w.Num2 == 0 {
-			ouch := tutorial.NewInvalidOperation()
-			ouch.WhatOp = int32(w.Op)
-			ouch.Why = "Cannot divide by 0"
-			err = ouch
-			return
-		}
-		val = w.Num1 / w.Num2
-		break
-	default:
-		ouch := tutorial.NewInvalidOperation()
-		ouch.WhatOp = int32(w.Op)
-		ouch.Why = "Unknown operation"
-		err = ouch
-		return
-	}
-	entry := shared.NewSharedStruct()
-	entry.Key = logid
-	entry.Value = strconv.Itoa(int(val))
-	k := int(logid)
-	/*
-	   oldvalue, exists := p.log[k]
-	   if exists {
-	     fmt.Print("Replacing ", oldvalue, " with ", entry, " for key ", k, "\n")
-	   } else {
-	     fmt.Print("Adding ", entry, " for key ", k, "\n")
-	   }
-	*/
-	p.log[k] = entry
-	return val, err
-}
-
-func (p *CalculatorHandler) GetStruct(key int32) (*shared.SharedStruct, error) {
-	fmt.Print("getStruct(", key, ")\n")
-	v, _ := p.log[int(key)]
-	return v, nil
-}
-
-func (p *CalculatorHandler) Zip() (err error) {
-	fmt.Print("zip()\n")
-	return nil
+	return 0, err
 }
