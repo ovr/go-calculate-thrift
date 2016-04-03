@@ -7,7 +7,10 @@ import (
 )
 
 func handleClient(client *tutorial.CalculatorClient) (err error) {
-	var requestErr error
+	var (
+		requestErr error
+		result int32
+	)
 
 	fmt.Println("Send ping()")
 
@@ -16,6 +19,16 @@ func handleClient(client *tutorial.CalculatorClient) (err error) {
 		fmt.Println(requestErr.Error())
 		return err
 	}
+
+	fmt.Println("Send Plus(10, 10)")
+
+	result, requestErr = client.Plus(10, 10)
+	if requestErr != nil {
+		fmt.Println(requestErr.Error())
+		return err
+	}
+
+	fmt.Println("Result := ", result)
 
 	return nil
 }
