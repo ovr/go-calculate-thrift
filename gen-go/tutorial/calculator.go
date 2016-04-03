@@ -35,7 +35,7 @@ type Calculator interface {
 	// Parameters:
 	//  - Num1
 	//  - Num2
-	Mod(num1 int32, num2 int32) (r int32, err error)
+	Mod(num1 int32, num2 float64) (r float64, err error)
 	// Parameters:
 	//  - Num1
 	//  - Num2
@@ -463,14 +463,14 @@ func (p *CalculatorClient) recvDiv() (value int32, err error) {
 // Parameters:
 //  - Num1
 //  - Num2
-func (p *CalculatorClient) Mod(num1 int32, num2 int32) (r int32, err error) {
+func (p *CalculatorClient) Mod(num1 int32, num2 float64) (r float64, err error) {
 	if err = p.sendMod(num1, num2); err != nil {
 		return
 	}
 	return p.recvMod()
 }
 
-func (p *CalculatorClient) sendMod(num1 int32, num2 int32) (err error) {
+func (p *CalculatorClient) sendMod(num1 int32, num2 float64) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -493,7 +493,7 @@ func (p *CalculatorClient) sendMod(num1 int32, num2 int32) (err error) {
 	return oprot.Flush()
 }
 
-func (p *CalculatorClient) recvMod() (value int32, err error) {
+func (p *CalculatorClient) recvMod() (value float64, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -1007,7 +1007,7 @@ func (p *calculatorProcessorMod) Process(seqId int32, iprot, oprot thrift.TProto
 
 	iprot.ReadMessageEnd()
 	result := CalculatorModResult{}
-	var retval int32
+	var retval float64
 	var err2 error
 	if retval, err2 = p.handler.Mod(args.Num1, args.Num2); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing mod: "+err2.Error())
@@ -2162,8 +2162,8 @@ func (p *CalculatorDivResult) String() string {
 //  - Num1
 //  - Num2
 type CalculatorModArgs struct {
-	Num1 int32 `thrift:"num1,1" json:"num1"`
-	Num2 int32 `thrift:"num2,2" json:"num2"`
+	Num1 int32   `thrift:"num1,1" json:"num1"`
+	Num2 float64 `thrift:"num2,2" json:"num2"`
 }
 
 func NewCalculatorModArgs() *CalculatorModArgs {
@@ -2174,7 +2174,7 @@ func (p *CalculatorModArgs) GetNum1() int32 {
 	return p.Num1
 }
 
-func (p *CalculatorModArgs) GetNum2() int32 {
+func (p *CalculatorModArgs) GetNum2() float64 {
 	return p.Num2
 }
 func (p *CalculatorModArgs) Read(iprot thrift.TProtocol) error {
@@ -2224,7 +2224,7 @@ func (p *CalculatorModArgs) readField1(iprot thrift.TProtocol) error {
 }
 
 func (p *CalculatorModArgs) readField2(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI32(); err != nil {
+	if v, err := iprot.ReadDouble(); err != nil {
 		return thrift.PrependError("error reading field 2: ", err)
 	} else {
 		p.Num2 = v
@@ -2265,10 +2265,10 @@ func (p *CalculatorModArgs) writeField1(oprot thrift.TProtocol) (err error) {
 }
 
 func (p *CalculatorModArgs) writeField2(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("num2", thrift.I32, 2); err != nil {
+	if err := oprot.WriteFieldBegin("num2", thrift.DOUBLE, 2); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:num2: ", p), err)
 	}
-	if err := oprot.WriteI32(int32(p.Num2)); err != nil {
+	if err := oprot.WriteDouble(float64(p.Num2)); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T.num2 (2) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
@@ -2287,16 +2287,16 @@ func (p *CalculatorModArgs) String() string {
 // Attributes:
 //  - Success
 type CalculatorModResult struct {
-	Success *int32 `thrift:"success,0" json:"success,omitempty"`
+	Success *float64 `thrift:"success,0" json:"success,omitempty"`
 }
 
 func NewCalculatorModResult() *CalculatorModResult {
 	return &CalculatorModResult{}
 }
 
-var CalculatorModResult_Success_DEFAULT int32
+var CalculatorModResult_Success_DEFAULT float64
 
-func (p *CalculatorModResult) GetSuccess() int32 {
+func (p *CalculatorModResult) GetSuccess() float64 {
 	if !p.IsSetSuccess() {
 		return CalculatorModResult_Success_DEFAULT
 	}
@@ -2340,7 +2340,7 @@ func (p *CalculatorModResult) Read(iprot thrift.TProtocol) error {
 }
 
 func (p *CalculatorModResult) readField0(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI32(); err != nil {
+	if v, err := iprot.ReadDouble(); err != nil {
 		return thrift.PrependError("error reading field 0: ", err)
 	} else {
 		p.Success = &v
@@ -2366,10 +2366,10 @@ func (p *CalculatorModResult) Write(oprot thrift.TProtocol) error {
 
 func (p *CalculatorModResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
-		if err := oprot.WriteFieldBegin("success", thrift.I32, 0); err != nil {
+		if err := oprot.WriteFieldBegin("success", thrift.DOUBLE, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
 		}
-		if err := oprot.WriteI32(int32(*p.Success)); err != nil {
+		if err := oprot.WriteDouble(float64(*p.Success)); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
 		}
 		if err := oprot.WriteFieldEnd(); err != nil {

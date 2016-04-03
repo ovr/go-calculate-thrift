@@ -25,7 +25,7 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "  i32 minus(i32 num1, i32 num2)")
 	fmt.Fprintln(os.Stderr, "  i64 mul(i32 num1, i32 num2)")
 	fmt.Fprintln(os.Stderr, "  i32 div(i32 num1, i32 num2)")
-	fmt.Fprintln(os.Stderr, "  i32 mod(i32 num1, i32 num2)")
+	fmt.Fprintln(os.Stderr, "  double mod(i32 num1, double num2)")
 	fmt.Fprintln(os.Stderr, "  i32 pow(i32 num1, i32 num2)")
 	fmt.Fprintln(os.Stderr, "  i32 calculate(i32 logid, Work w)")
 	fmt.Fprintln(os.Stderr)
@@ -230,12 +230,11 @@ func main() {
 		}
 		argvalue0 := int32(tmp0)
 		value0 := argvalue0
-		tmp1, err27 := (strconv.Atoi(flag.Arg(2)))
+		argvalue1, err27 := (strconv.ParseFloat(flag.Arg(2), 64))
 		if err27 != nil {
 			Usage()
 			return
 		}
-		argvalue1 := int32(tmp1)
 		value1 := argvalue1
 		fmt.Print(client.Mod(value0, value1))
 		fmt.Print("\n")
