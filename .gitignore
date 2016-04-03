@@ -1,1 +1,3 @@
 .idea
+src/client/client
+src/server/server
