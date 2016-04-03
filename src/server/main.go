@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"github.com/ovr/go-calculate-thrift/gen-go/tutorial"
+	"log"
 )
 
 
@@ -18,10 +19,11 @@ func runServer(transportFactory thrift.TTransportFactory, protocolFactory thrift
 		return err
 	}
 
-	processor := tutorial.NewCalculatorProcessor(NewCalculatorHandler())
+	handler := NewCalculatorHandler()
+	processor := tutorial.NewCalculatorProcessor(handler)
 	server := thrift.NewTSimpleServer4(processor, transport, transportFactory, protocolFactory)
 
-	fmt.Println("Starting the simple server... on ", addr)
+	log.Println("Starting the simple server... on ", addr)
 	return server.Serve()
 }
 
@@ -46,8 +48,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	var transportFactory thrift.TTransportFactory
+	log.Println(*protocol)
+
+	transportFactory := thrift.NewTTransportFactory()
 	if err := runServer(transportFactory, protocolFactory, *addr); err != nil {
-		fmt.Println("error running server:", err)
+		log.Println("error running server:", err)
 	}
 }
