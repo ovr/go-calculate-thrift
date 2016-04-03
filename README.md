@@ -1,5 +1,6 @@
 Calculate RPC server on Go/Thrift
 =================================
+[![Build Status](https://travis-ci.org/ovr/go-calculate-thrift.svg?branch=master)](https://travis-ci.org/ovr/go-calculate-thrift)
 
 # Installation
 
