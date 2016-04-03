@@ -7,12 +7,16 @@ import (
 )
 
 func handleClient(client *tutorial.CalculatorClient) (err error) {
-	client.Ping()
-	fmt.Println("ping()")
-	//
-	//sum, _ := client.Add(1, 1)
-	//fmt.Print("1+1=", sum, "\n")
-	//
+	var requestErr error
+
+	fmt.Println("Send ping()")
+
+	requestErr = client.Ping()
+	if requestErr != nil {
+		fmt.Println(requestErr.Error())
+		return err
+	}
+
 	return nil
 }
 
