@@ -3,8 +3,8 @@ package main
 import (
 	"errors"
 	"github.com/ovr/go-calculate-thrift/gen-go/tutorial"
-	"math"
 	"log"
+	"math"
 )
 
 type CalculatorHandler struct {
