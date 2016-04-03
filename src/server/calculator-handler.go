@@ -19,7 +19,7 @@ func (p *CalculatorHandler) Ping() (err error) {
 }
 
 func (p *CalculatorHandler) Plus(num1 int32, num2 int32) (r int32, err error) {
-	fmt.Print("add(", num1, ",", num2, ")\n")
+	fmt.Print("Plus(", num1, ",", num2, ")\n")
 	return num1 + num2, nil
 }
 
