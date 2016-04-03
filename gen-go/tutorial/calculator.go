@@ -35,7 +35,7 @@ type Calculator interface {
 	// Parameters:
 	//  - Num1
 	//  - Num2
-	Mod(num1 int32, num2 float64) (r float64, err error)
+	Mod(num1 float64, num2 float64) (r float64, err error)
 	// Parameters:
 	//  - Num1
 	//  - Num2
@@ -463,14 +463,14 @@ func (p *CalculatorClient) recvDiv() (value int32, err error) {
 // Parameters:
 //  - Num1
 //  - Num2
-func (p *CalculatorClient) Mod(num1 int32, num2 float64) (r float64, err error) {
+func (p *CalculatorClient) Mod(num1 float64, num2 float64) (r float64, err error) {
 	if err = p.sendMod(num1, num2); err != nil {
 		return
 	}
 	return p.recvMod()
 }
 
-func (p *CalculatorClient) sendMod(num1 int32, num2 float64) (err error) {
+func (p *CalculatorClient) sendMod(num1 float64, num2 float64) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -2162,7 +2162,7 @@ func (p *CalculatorDivResult) String() string {
 //  - Num1
 //  - Num2
 type CalculatorModArgs struct {
-	Num1 int32   `thrift:"num1,1" json:"num1"`
+	Num1 float64 `thrift:"num1,1" json:"num1"`
 	Num2 float64 `thrift:"num2,2" json:"num2"`
 }
 
@@ -2170,7 +2170,7 @@ func NewCalculatorModArgs() *CalculatorModArgs {
 	return &CalculatorModArgs{}
 }
 
-func (p *CalculatorModArgs) GetNum1() int32 {
+func (p *CalculatorModArgs) GetNum1() float64 {
 	return p.Num1
 }
 
@@ -2215,7 +2215,7 @@ func (p *CalculatorModArgs) Read(iprot thrift.TProtocol) error {
 }
 
 func (p *CalculatorModArgs) readField1(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI32(); err != nil {
+	if v, err := iprot.ReadDouble(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
 		p.Num1 = v
@@ -2252,10 +2252,10 @@ func (p *CalculatorModArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *CalculatorModArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("num1", thrift.I32, 1); err != nil {
+	if err := oprot.WriteFieldBegin("num1", thrift.DOUBLE, 1); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:num1: ", p), err)
 	}
-	if err := oprot.WriteI32(int32(p.Num1)); err != nil {
+	if err := oprot.WriteDouble(float64(p.Num1)); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T.num1 (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {

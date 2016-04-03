@@ -25,7 +25,7 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "  i32 minus(i32 num1, i32 num2)")
 	fmt.Fprintln(os.Stderr, "  i64 mul(i32 num1, i32 num2)")
 	fmt.Fprintln(os.Stderr, "  i32 div(i32 num1, i32 num2)")
-	fmt.Fprintln(os.Stderr, "  double mod(i32 num1, double num2)")
+	fmt.Fprintln(os.Stderr, "  double mod(double num1, double num2)")
 	fmt.Fprintln(os.Stderr, "  i32 pow(i32 num1, i32 num2)")
 	fmt.Fprintln(os.Stderr, "  i32 calculate(i32 logid, Work w)")
 	fmt.Fprintln(os.Stderr)
@@ -223,12 +223,11 @@ func main() {
 			fmt.Fprintln(os.Stderr, "Mod requires 2 args")
 			flag.Usage()
 		}
-		tmp0, err26 := (strconv.Atoi(flag.Arg(1)))
+		argvalue0, err26 := (strconv.ParseFloat(flag.Arg(1), 64))
 		if err26 != nil {
 			Usage()
 			return
 		}
-		argvalue0 := int32(tmp0)
 		value0 := argvalue0
 		argvalue1, err27 := (strconv.ParseFloat(flag.Arg(2), 64))
 		if err27 != nil {

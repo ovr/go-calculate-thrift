@@ -32,7 +32,7 @@ service Calculator {
 
    i32 div(1:i32 num1, 2:i32 num2),
 
-   double mod(1:i32 num1, 2:double num2),
+   double mod(1:double num1, 2:double num2),
 
    i32 pow(1:i32 num1, 2:i32 num2),
 
