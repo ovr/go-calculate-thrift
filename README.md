@@ -21,7 +21,7 @@ go build .
 ### How to build Client?
 
 ```
-cd src/server
+cd src/client
 go build .
-./server
+./client
 ```
