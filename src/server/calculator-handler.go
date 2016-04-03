@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/ovr/go-calculate-thrift/gen-go/tutorial"
 	"errors"
+	"math"
 )
 
 type CalculatorHandler struct {
@@ -45,9 +46,9 @@ func (p *CalculatorHandler) Div(num1 int32, num2 int32) (val int32, err error) {
 	return num1 / num2, nil
 }
 
-func (p *CalculatorHandler) Mod(num1 int32, num2 int32) (val int32, err error) {
+func (p *CalculatorHandler) Mod(num1 float64, num2 float64) (r float64, err error) {
 	fmt.Print("Mod(", num1, ",", num2, ")\n")
-	return 0, nil
+	return math.Mod(num1, num2), nil
 }
 
 func (p *CalculatorHandler) Pow(num1 int32, num2 int32) (val int32, err error) {

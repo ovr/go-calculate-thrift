@@ -11,6 +11,7 @@ func handleClient(client *tutorial.CalculatorClient) (err error) {
 		requestErr error
 		result int32
 		result64 int64
+		result64f float64
 	)
 
 	fmt.Println("Send ping()")
@@ -52,6 +53,14 @@ func handleClient(client *tutorial.CalculatorClient) (err error) {
 		return err
 	}
 	fmt.Println("Result := ", result64)
+
+	fmt.Println("Send Mod(5, 5)")
+	result64f, requestErr = client.Mod(5.0, 5.0)
+	if requestErr != nil {
+		fmt.Println(requestErr.Error())
+		return err
+	}
+	fmt.Println("Result := ", result64f)
 
 	return nil
 }
