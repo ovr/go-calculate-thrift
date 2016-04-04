@@ -64,6 +64,16 @@ And run the client:
 ./client
 ```
 
+You can change port and address of the server:
+
+```sh
+Usage of ./client:
+  -P string
+    	Protocol (binary, compact, json, simplejson) (default "binary")
+  -addr string
+    	Address to listen to (default "localhost:9090")
+```
+
 # LICENSE
 
 MIT
