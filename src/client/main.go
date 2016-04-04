@@ -99,7 +99,7 @@ func main() {
 			fmt.Scanln(&num2)
 
 			inputs := []reflect.Value{reflect.ValueOf(num1), reflect.ValueOf(num2)}
-			returnValues := reflect.ValueOf(client).MethodByName(MakeFirstUpperCase(command)).Call(inputs)
+			returnValues := reflect.ValueOf(client).MethodByName(makeFirstUpperCase(command)).Call(inputs)
 
 			if !returnValues[1].IsNil() {
 				responseError := returnValues[1].Interface().(error)
