@@ -8,6 +8,7 @@ import (
 	"reflect"
 "bytes"
 "strings"
+"github.com/ovr/go-calculate-thrift/gen-go/tutorial"
 )
 
 func Usage() {
@@ -72,6 +73,7 @@ func main() {
 
 	var (
 		command string
+		work string
 		num1 int32
 		num2 int32
 	)
@@ -109,6 +111,39 @@ func main() {
 
 			result := returnValues[0].Int()
 			fmt.Println("Result ", result)
+		case "calculate", "work":
+			fmt.Println("Enter work: ")
+			fmt.Scanln(&work)
+
+			workRequest := tutorial.NewWork()
+
+			switch work {
+			case "plus", "add":
+				workRequest.Op = tutorial.Operation_ADD
+			case "minus":
+				workRequest.Op = tutorial.Operation_SUBTRACT
+			case "mul":
+				workRequest.Op = tutorial.Operation_MULTIPLY
+			case "div":
+				workRequest.Op = tutorial.Operation_DIVIDE
+			default:
+				fmt.Fprintln(os.Stderr, "Invalid work type", work)
+				os.Exit(1)
+
+			}
+
+			fmt.Println("Enter 1 number: ")
+			fmt.Scanln(&workRequest.Num1)
+
+			fmt.Println("Enter 2 number: ")
+			fmt.Scanln(&workRequest.Num2)
+
+			result, err := client.Calculate(workRequest)
+			if err != nil {
+				fmt.Println(err.Error())
+				continue
+			}
+			fmt.Println("Result := ", result)
 		default:
 			fmt.Fprintln(os.Stderr, "Invalid command", command)
 			os.Exit(1)
