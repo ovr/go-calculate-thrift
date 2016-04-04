@@ -699,6 +699,7 @@ func (p *CalculatorClient) recvCalculate() (value int32, err error) {
 }
 
 type CalculatorProcessor struct {
+	thrift.TProcessor
 	processorMap map[string]thrift.TProcessorFunction
 	handler      Calculator
 }
