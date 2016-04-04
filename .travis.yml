@@ -5,7 +5,7 @@ branches:
     - master
 
 script:
-  - go get git.apache.org/thrift.git/lib/go/thrift
+  - go get github.com/apache/thrift/lib/go/thrift
   - go get github.com/ovr/go-calculate-thrift/gen-go/tutorial
   - go get github.com/stretchr/testify/assert
   - make tests
