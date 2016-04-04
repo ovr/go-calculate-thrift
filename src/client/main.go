@@ -1,14 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"github.com/apache/thrift/lib/go/thrift"
+	"github.com/ovr/go-calculate-thrift/gen-go/tutorial"
 	"os"
 	"reflect"
-"bytes"
-"strings"
-"github.com/ovr/go-calculate-thrift/gen-go/tutorial"
+	"strings"
 )
 
 func Usage() {
@@ -65,7 +65,7 @@ func main() {
 	}
 
 	client, err := runClient(thrift.NewTTransportFactory(), protocolFactory, *addr)
-	if  err != nil {
+	if err != nil {
 		fmt.Println("error running client:", err)
 		os.Exit(1)
 	}
@@ -73,9 +73,9 @@ func main() {
 
 	var (
 		command string
-		work string
-		num1 int32
-		num2 int32
+		work    string
+		num1    int32
+		num2    int32
 	)
 
 	for {
@@ -85,7 +85,7 @@ func main() {
 		switch command {
 		case "ping":
 			fmt.Println("Ping send")
-			responseError := client.Ping();
+			responseError := client.Ping()
 			if responseError != nil {
 				fmt.Fprintln(os.Stderr, "Error was caused")
 				fmt.Fprintln(os.Stderr, responseError.Error())
