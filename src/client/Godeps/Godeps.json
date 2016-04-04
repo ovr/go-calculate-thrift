@@ -1,0 +1,15 @@
+{
+	"ImportPath": ".",
+	"GoVersion": "go1.6",
+	"GodepVersion": "v60",
+	"Deps": [
+		{
+			"ImportPath": "github.com/apache/thrift/lib/go/thrift",
+			"Rev": "cdc83335d60756c4bfb0d2c8af7933500c9e3c06"
+		},
+		{
+			"ImportPath": "github.com/ovr/go-calculate-thrift/gen-go/tutorial",
+			"Rev": "657ac692b72de06e2a36cf990b2864d167c8d7af"
+		}
+	]
+}

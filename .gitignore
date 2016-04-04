@@ -1,4 +1,7 @@
 .idea
+# Client
 src/client/client
+src/client/vendor
+# Server
 src/server/server
 src/server/vendor
