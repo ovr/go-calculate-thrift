@@ -24,17 +24,43 @@ thrift -r --gen go calculate.thrift
 
 ### How to build Server?
 
+First you need to change you directory to the server dir:
+
 ```sh
 cd src/server
-go build .
+```
+
+Next setup SETUP `$GOPATH`, restore deps and build it:
+
+```sh
+godep restore
+godep go build
+```
+
+And run the server:
+
+```sh
 ./server
 ```
 
 ### How to build Client?
 
+First you need to change you directory to the client dir:
+
 ```sh
 cd src/client
-go build .
+```
+
+Next setup SETUP `$GOPATH`, restore deps and build it:
+
+```sh
+godep restore
+godep go build
+```
+
+And run the client:
+
+```sh
 ./client
 ```
 
